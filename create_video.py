@@ -6,8 +6,6 @@ import numpy as np
 from PIL import Image
 import cv2
 
-# Supported video file extensions
-supported_video_ext = ('.avi', '.mp4')
 
 # Supported image file extensions
 supported_img_ext = ('.jpg', '.png')
@@ -69,19 +67,19 @@ def main():
     parser.add_argument('-v', '--verbose', action='store_true', help="increase output verbosity")
     parser.add_argument('--img_dir', type=str, required=True, help="set input image directory")
     parser.add_argument('--fps', type=int, default=1, help="set output video fps")
+    parser.add_argument('--fourcc', type=str, default="MJPG",
+                        choices=("MJPG", "XVID"),
+                        help="set the 4-character code of codec used to compress the frames."
+                             "For a full set of codecs, see: http://www.fourcc.org/codecs.php")
     parser.add_argument('--video', type=str, help="set output video file in format <filename>.<ext>")
     args = parser.parse_args()
 
     # Check if given video file extension is supported
     video_ext = osp.splitext(args.video)[-1]
     user_confirmation = True
-    if video_ext not in supported_video_ext:
-        raise ValueError("Output video extension is not supported: {}\nChoose in {}".format(video_ext,
-                                                                                            supported_video_ext))
-    else:
-        # Check if given output video file exists -- Ask user's confirmation for overwriting it
-        if osp.exists(args.video):
-            user_confirmation = query('Output video file exists: {}\nOverwrite?'.format(args.video))
+    # Check if given output video file exists -- Ask user's confirmation for overwriting it
+    if osp.exists(args.video):
+        user_confirmation = query('Output video file exists: {}\nOverwrite?'.format(args.video))
     if not user_confirmation:
         sys.exit()
 
@@ -110,12 +108,7 @@ def main():
     max_frame_width = max(img_widths)
     max_frame_height = max(img_heights)
     frame_shape = (max_frame_width, max_frame_height)
-    # REVIEW: choose proper `fourcc`
-    # see: https://www.pyimagesearch.com/2016/02/22/writing-to-video-with-opencv/
-    # see: http://www.fourcc.org/codecs.php
-    fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-    # fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-    # fourcc = 0
+    fourcc = cv2.VideoWriter_fourcc(*args.fourcc)
     video = cv2.VideoWriter(args.video, fourcc, args.fps, frame_shape)
     for frame_no in range(len(img_files)):
         progress_updt("  \\__.Progress", len(img_files), frame_no + 1)
