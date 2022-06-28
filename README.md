@@ -1,8 +1,19 @@
 # PyVideoCreator: Create video in Python using OpenCV
 
-
-
 A simple Python script for creating video files from images in given directory (and all its sub-directories) using OpenCV. 
+
+## Installation
+
+We recommend installing the required packages using python's native virtual environment as follows:
+
+```bash
+$ python -m venv py-video-creator-venv
+$ source py-video-creator-venv/bin/activate
+(py-video-creator-venv) $ pip install --upgrade pip
+(py-video-creator-venv) $ pip install -r requirements.txt
+```
+
+## Usage
 
 ~~~
 python create_video.py -h
