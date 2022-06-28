@@ -104,8 +104,7 @@ def main():
                 img_heights.append(img_h)
                 img_files.append(osp.join(r, file))
     img_files.sort()
-
-
+    
     # Write video
     max_frame_width = max(img_widths)
     max_frame_height = max(img_heights)
